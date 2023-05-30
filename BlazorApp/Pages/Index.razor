@@ -1,0 +1,36 @@
+﻿@page "/"
+@using Blazor.Extensions.Canvas.Canvas2D;
+@using Blazor.Extensions;
+@using BlazorApp.Code;
+@using BlazorApp.NewFolder;
+
+<head>
+  <link href="css/app.css" rel="stylesheet" />
+</head>
+
+<div>
+  <BECanvas  Width="@GetWidth()" Height="@GetHeight()" @ref="_canvasReference"></BECanvas>
+</div>
+
+@code {
+    private Canvas2DContext _context;
+    private Canvas canvas = new Canvas(); 
+
+    protected BECanvasComponent _canvasReference;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        this._context = await this._canvasReference.CreateCanvas2DAsync();
+        await this._context.SetFillStyleAsync("green");
+
+        await this._context.FillRectAsync(10, 100, 100, 100);
+
+        await this._context.SetFontAsync("48px serif");
+        await this._context.StrokeTextAsync("Hello Blazor!!!", 10, 100);
+
+        await canvas.DrawAsync(_context);
+    }
+
+    public int GetWidth() => canvas.Width;
+    public int GetHeight() => canvas.Height;
+}
